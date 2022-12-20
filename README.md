@@ -6,7 +6,9 @@ The pre-print of this research is available [here](https://arxiv.org/abs/2212.09
 Data scarcity is one of the main issues with the end-to-end approach for Speech Translation, as compared to the cascaded one. Although most data resources for Speech Translation are originally document-level, they offer a sentence-level view, which can be directly used during training. But this sentence-level view is single and static, potentially limiting the utility of the data. Our proposed data augmentation method SegAugment challenges this idea and aims to increase data availability by providing multiple alternative sentence-level views of a dataset. Our method heavily relies on an Audio Segmentation system to re-segment the speech of each document, after which we obtain the target text with alignment methods. The Audio Segmentation system can be parameterized with different length constraints, thus giving us access to multiple and diverse sentence-level views for each document. Experiments in MuST-C show consistent gains across 8 language pairs, with an average increase of 2.2 BLEU points, and up to 4.7 BLEU for lower-resource scenarios in mTEDx. Additionally, we find that SegAugment is also applicable to purely sentence-level data, as in CoVoST, and that it enables Speech Translation models to completely close the gap between the gold and automatic segmentation at inference time.
 </em>
 
-![](figures/introduction_solid.jpg)
+&nbsp;
+
+<img src="figures/introduction_solid.jpg" width="600">
 
 ## Citation
 
@@ -35,29 +37,31 @@ The format is similar to the one found in MuST-C and mTEDx:
 
 MuST-C
 
-|En-De (v2.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-Es (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-Fr (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-It (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-Nl (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-Pt (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-Ro (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|En-Ru (v1.0)|[short](...)|[medium](...)|[long](...)|[extra-long](...)|
-|---|---|---|---|---|---|
+|En-De (v2.0)|[short](https://drive.google.com/uc?export=download&id=1v5B_974Xp_UXjy8VH5eXZgzqHHSGduRZ)|[medium](https://drive.google.com/uc?export=download&id=1v4wQyhH6laOgCCVW_WS-5Jy9w-KnCQY9)|[long](https://drive.google.com/uc?export=download&id=1uyKf0E6b8NhCEfJzrUxtTrmHViKq5vDC)|[extra-long](https://drive.google.com/uc?export=download&id=1usaybFjJC-gu4ARxosBzZjNlJNCCC2WX)|
+|---|---|---|---|---|
+|En-Es|[short](https://drive.google.com/uc?export=download&id=1sbNhHpfR_IIfUWvbb7g2FxMP_sn0DKkl)|[medium](https://drive.google.com/uc?export=download&id=1s_ZGShc1WODNgrt1UT87DkhdGKXvweVx)|[long](https://drive.google.com/uc?export=download&id=1sQO0iYEfbNUdS11rDMCb9YGTOZMIl6DH)|[extra-long](https://drive.google.com/uc?export=download&id=1sLPjnbpaMnmvOmYMnCIRviuIWtiuZCNG)|
+|En-Fr|[short](https://drive.google.com/uc?export=download&id=1szYcZfP9pFrAA6KN4oTpc5HouxAqxb8u)|[medium](https://drive.google.com/uc?export=download&id=1snpZjKGYRPJ3zu0f2HNWHgihByAQBklk)|[long](https://drive.google.com/uc?export=download&id=1sesgB_MUNnR5pHtuULn3kBLilHuZtctF)|[extra-long](https://drive.google.com/uc?export=download&id=1sgb9Am1doggPsVfeDrMCs6Y6qvpN4uiz)|
+|En-It|[short](https://drive.google.com/uc?export=download&id=1tEDm93gCyAJUU0-UnsomVRGPJeXu0nxU)|[medium](https://drive.google.com/uc?export=download&id=1t8H1Bvid0wO4deWbm0YUNmnRsycCnSbl)|[long](https://drive.google.com/uc?export=download&id=1tD6N5wzFH9EgLCAA6MvAxXjvnd6YevQ9)|[extra-long](https://drive.google.com/uc?export=download&id=1snzkp73RPjZ8nGTcPdomiay0lQWoKoep)|
+|En-Nl|[short](https://drive.google.com/uc?export=download&id=1tUVRKhhl7saQGsVDIeHfbMpzgTcWK-xq)|[medium](https://drive.google.com/uc?export=download&id=1tOnmjaaerpvNi3dd0UqYgUD35pOYWCAp)|[long](https://drive.google.com/uc?export=download&id=1tP4cAyDFXBj6ixDHff1CoOcxF2epaebS)|[extra-long](https://drive.google.com/uc?export=download&id=1tKnGKjOk6l4IlJjH22pHb7CTlk3_h68w)|
+|En-Pt|[short](https://drive.google.com/uc?export=download&id=1ts_GRYUbLSGJcWwMTCMORJqRgUjDJLnD)|[medium](https://drive.google.com/uc?export=download&id=1tv8RKkC9BSHo4OyWmtrzLSux1eVlqUWo)|[long](https://drive.google.com/uc?export=download&id=1tuevLRQDSaJ0qTsP2kCla8uybMz2FKPk)|[extra-long](https://drive.google.com/uc?export=download&id=1taZXQ-dY_4aMjVr4higdkbebaT-uBI66)|
+|En-Ro|[short](https://drive.google.com/uc?export=download&id=1uJNAqL4Cg5EE9Nup_eHCl7-WFYJ4qC8M)|[medium](https://drive.google.com/uc?export=download&id=1uC7rE6YiHimgJKgVBgZ0_N0t-YDzwuBR)|[long](https://drive.google.com/uc?export=download&id=1uAHFxmvP5Nyxgqy5ivyeFiBzJeDQd03Z)|[extra-long](https://drive.google.com/uc?export=download&id=1u-80RjJy3fpf_1Sm8inKOW-gIknpdvep)|
+|En-Ru|[short](https://drive.google.com/uc?export=download&id=1us_0aZab16a_Lz_EH9fDEYVjTCJeuRkg)|[medium](https://drive.google.com/uc?export=download&id=1uWWe5rjFpK019ISi3oS18UWsJ7WodH2Z)|[long](https://drive.google.com/uc?export=download&id=1uSk9V9W0R-bsygzKxEXx_c6C-qeInHGR)|[extra-long](https://drive.google.com/uc?export=download&id=1uJrLlydTW_UjfydFuHqJ_2-8BUtOjm06)|
 
 mTEDx
 
-|Es-En|[short](https://drive.google.com/drive/folders/1czkMyCoLsVDrvpB3zR_YfG_5-vhtRbAX?usp=sharing)|[medium](https://drive.google.com/drive/folders/1cxUr8rGbtDXlcdxXDIwSzeLYTJ2EWHAR?usp=sharing)|[long](https://drive.google.com/drive/folders/1caJZ6eaVCRz6VA_TXdwb9lM0TZL-mCRP?usp=sharing)|[extra-long](https://drive.google.com/drive/folders/1coS_PzjINObjA9w4O5BPICvTvHQjaogr?usp=sharing)|
-|Es-Fr|[short](https://drive.google.com/drive/folders/1cEDr4mgnciG5UCO39fQtKc9J3DNiBfGA?usp=sharing)|[medium](https://drive.google.com/drive/folders/1cEklKZeqepA1I91ee7UCrt6687u1milz?usp=sharing)|[long](https://drive.google.com/drive/folders/1cGfMDQH_r8myKULKUEH9wjNy-lQJen95?usp=sharing)|[extra-long](https://drive.google.com/drive/folders/1cEoUe5N-ncBEDdDDLZIeDh4_j3hJpIYy?usp=sharing)|
-|Pt-En|[short](https://drive.google.com/drive/folders/1cEoUe5N-ncBEDdDDLZIeDh4_j3hJpIYy?usp=sharing)|[medium](https://drive.google.com/drive/folders/1cHeh6bZMKrsArawLvKrKK3s4-CjU6pWF?usp=sharing)|[long](https://drive.google.com/drive/folders/1cVlWUH71uw8yxq4oU9wlEyVba5eGJZUt?usp=sharing)|[extra-long](https://drive.google.com/drive/folders/1cHOfSzkhwBnEii_joyLThCTNKDdDaN_P?usp=share_link)|
-|Es-Es|[short](https://drive.google.com/drive/folders/1dC2jJaGr5eH9bb80xZinR6ULFZqFO7hh?usp=sharing)|[medium](https://drive.google.com/drive/folders/1d22z7H5kAblhPrqZK3i3RnFEqQU2cCX2?usp=sharing)|[long](https://drive.google.com/drive/folders/1d4XI-fF6HjKFMirEpyY8Nno6fTGJJdLY?usp=sharing)|[extra-long](https://drive.google.com/drive/folders/1d9erH935eVuQ-vkGLee4TWY-Xdrdbwwq?usp=sharing)|
-|Pt-Pt|[short](https://drive.google.com/drive/folders/1h0Eu9rWpcP5XCXJGbWSeYvggzZHo_D2b?usp=sharing)|[medium](https://drive.google.com/drive/folders/1h0NWUob8sTlyAyAQw3SQqMTBIGKJQ5nJ?usp=share_link)|[long](https://drive.google.com/drive/folders/1gz9UuB6QohsnVgsKIRRrSAF-CEFoKlWk?usp=share_link)|[extra-long](https://drive.google.com/drive/folders/1gxZBne-x_tM7wHqOoFrOoSbMJ_74vsGO?usp=share_link)|
-|---|---|---|---|---|---|
+|Es-En|[short](https://drive.google.com/uc?export=download&id=1r_NltYeAoimyJIFgub8MJ9f6zESq-VCN)|[medium](https://drive.google.com/uc?export=download&id=1rXuli-c1bdE0pnF0k2e1Rmgo73kxKLA3)|[long](https://drive.google.com/uc?export=download&id=1rZt9-PpbsWkZxFGaImqzJkvuzZ4E8Ehw)|[extra-long](https://drive.google.com/uc?export=download&id=1rTRtSS9HMx6Sb_uupGN4cshdNQ142JWC)|
+|---|---|---|---|---|
+|Es-Fr|[short](https://drive.google.com/uc?export=download&id=1rtC4gGn1AeNPNjKY-ckvheS4Yo06h-NU)|[medium](https://drive.google.com/uc?export=download&id=1rTRtSS9HMx6Sb_uupGN4cshdNQ142JWC)|[long](https://drive.google.com/uc?export=download&id=1rlYgpBIE0zECVWCcc0SWxdhV2Phe_M18)|[extra-long](https://drive.google.com/uc?export=download&id=1rozUGTFvWg4EmCNDUOwXuWeR5FnNdCLn)|
+|Pt-En|[short](https://drive.google.com/uc?export=download&id=1sB0haJofpIvtcXAuEqnEHnEjuSEcMcJI)|[medium](https://drive.google.com/uc?export=download&id=1sIc9nbQYaN-TaJNCXeZlexs2xYNZjQCb)|[long](https://drive.google.com/uc?export=download&id=1sB27P4r4VjCtHFnEI7Jf1LhgI5jaQpc4)|[extra-long](https://drive.google.com/uc?export=download&id=1rq4n_wlMijHXZ6zmxlc7o4ypVf_dUMzu)|
+|Es-Es|[short](https://drive.google.com/uc?export=download&id=1rxez5cbcRjHVPVktvtIfagIL8P-9XCw2)|[medium](https://drive.google.com/uc?export=download&id=1rq4GPYtTzWX_-BfwMAQr1miCNLmCycYa)|[long](https://drive.google.com/uc?export=download&id=1reTKhYAleALZZRVOdC9YG0JXEl_nvavT)|[extra-long](https://drive.google.com/uc?export=download&id=1rd0pYjijNWUlJVrFVri8O3ODsuEo3U0R)|
+|Pt-Pt|[short](https://drive.google.com/uc?export=download&id=1sXhFDtj508ABBYA8YV2zjcTo5m1KnsH6)|[medium](https://drive.google.com/uc?export=download&id=1sNM5qomeguAO89aNK8Yudw2R6v0Ggr87)|[long](https://drive.google.com/uc?export=download&id=1sPjUUEyo17dZpOtTIem-F7O5q1OZEM5I)|[extra-long](https://drive.google.com/uc?export=download&id=1sJa-rERFPChwUAMKsONGMY1-w3w3-_73)|
 
 CoVoST
 
-|En-De|[short](https://drive.google.com/drive/folders/1j2qQvjTCQRquEx9JkvC7tbEOsXdJtChe?usp=sharing)|[medium](https://drive.google.com/drive/folders/1j3wTFCvxH5noBkja0gVT0WzTcl3XWsW9?usp=sharing)|-|-|
-|---|---|---|---|---|---|
+|En-De|[short](https://drive.google.com/uc?export=download&id=1v98N0eUS5cKDkvcEmN3I9tAAinaylKqasharing)|[medium](https://drive.google.com/uc?export=download&id=1v9hvRhoJWfi7ASBtvYzVQRN1wcecXMgf)|
+|---|---|---|
+
+To use the data for Speech Translation you will have to also download the original audio files for each dataset.
 
 ## Code and Instructions for using SegAugment
 
