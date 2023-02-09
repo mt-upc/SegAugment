@@ -25,7 +25,7 @@ Data scarcity is one of the main issues with the end-to-end approach for Speech 
 }
 ```
 
-## Augmented Datasets
+## Synthetic Datasets
 
 Here you can download the generated data from SegAugment for MuST-C, mTEDx and CoVoST.
 
@@ -65,4 +65,233 @@ To use the data for Speech Translation you will have to also download the origin
 
 ## Code and Instructions for using SegAugment
 
-Under construction...
+### Setting up the environment
+
+Set the environment variables:
+
+```bash
+export SEGAUGMENT_ROOT=...          # the path to this repo
+export OUTPUT_ROOT=...              # the path to save the outputs of SegAugment, including synthetic data, alignments, and models
+export FAIRSEQ_ROOT=...             # the path to our fairseq fork
+export SHAS_ROOT=...                # the path to the SHAS repo
+export SHAS_CKPTS=...               # the path to the pre-trained SHAS classifier checkpoints
+export MUSTCv2_ROOT=...             # the path to save MuST-C v2.0
+export MUSTCv1_ROOT=...             # the path to save MuST-C v1.0
+export MTEDX_ROOT=...               # the path to save mTEDx
+```
+
+<!-- DELETE THIS -->
+```bash
+export SEGAUGMENT_ROOT=~/repos/SegAugment
+export OUTPUT_ROOT=$VEUSSD/seg_augment_out
+export FAIRSEQ_ROOT=~/repos/fairseq-internal-segmaugm
+export SHAS_ROOT=~/repos/SHAS
+export SHAS_CKPTS=$SCRATCH/pretrained_models/SHAS
+export MUSTCv2_ROOT=$SPEECH_DATA/MUSTC_v2.0_spec
+export MUSTCv1_ROOT=$SPEECH_DATA/MUSTC_v1.0_spec
+export MTEDX_ROOT=$SPEECH_DATA/mTEDx
+```
+
+Clone this repository to `$SEGAUGMENT_ROOT`:
+
+```bash
+git clone https://github.com/mt-upc/SegAugment.git ${SEGAUGMENT_ROOT}    
+```
+
+Create a conda environment using the `environment.yml` file and activate it:
+
+```bash
+conda env create -f ${SEGAUGMENT_ROOT}/environment.yml && \
+conda activate seg_augment
+```
+
+Install our fork of fairseq:
+
+```bash
+git clone -b SegAugment https://github.com/mt-upc/fairseq-internal.git ${FAIRSEQ_ROOT}
+pip install --editable ${FAIRSEQ_ROOT}
+```
+
+Clone the SHAS repository to `$SHAS_ROOT`:
+
+```bash
+git clone -b experimental https://github.com/mt-upc/SHAS.git ${SHAS_ROOT}    
+```
+
+Create a second conda environment for SHAS (no need to activate it for now):
+
+```bash
+conda env create -f ${SHAS_ROOT}/environment.yml
+```
+
+Download the English and Multiliongual pre-trained SHAS classifier and save at `$SHAS_CKPTS`:
+
+|[English](https://drive.google.com/u/0/uc?export=download&confirm=DOjP&id=1Y7frjVkB_85snZYHTn0PQQG_kC5afoYN)|[Multilingual](https://drive.google.com/u/0/uc?export=download&confirm=x9hB&id=1GzwhzbHBFtwDmQPKoDOdAfESvWBrv_wB)|
+|---|---|
+
+
+### Data
+
+For our main experiments we used MuST-C and mTEDx. Follow the instructions here to download and prepare the original data.
+
+Download MuST-C v2.0 En-De to `$MUSTCv2_ROOT` and the v1.0 En-X to `$MUSTCv1_ROOT`:\
+The dataset is available [here](https://ict.fbk.eu/must-c/). Press the bottom ”click here to download the corpus”, and select version V1 and V2 accordingly.
+
+To prepare the data for training, run the following processing scripts. (We are also using the ASR data from v2.0 for pre-training.)
+
+```bash
+python ${FAIRSEQ_ROOT}/examples/speech_to_text/prep_mustc_data.py \
+  --data-root ${MUSTCv2_ROOT} --task asr --vocab-type unigram --vocab-size 5000
+
+for root in $MUSTCv2_ROOT $MUSTCv1_ROOT; do
+  python ${FAIRSEQ_ROOT}/examples/speech_to_text/prep_mustc_data.py \
+    --data-root $root --task st --vocab-type unigram --vocab-size 8000
+done
+```
+
+Download the mTEDx Es-En, Es-Pt, Es-Fr and Es, Pt ASR data to `$MTEDX_ROOT` and run the processing scripts to prepare them:
+
+```bash
+mkdir -p ${MTEDX_ROOT}/log_dir
+for lang_pair in {es-en,pt-en,es-fr,es-es,pt-pt}; do
+  wget https://www.openslr.org/resources/100/mtedx_${lang_pair}.tgz -o ${MTEDX_ROOT}/log_dir/${lang_pair} -c -b -O - | tar -xz -C ${MTEDX_ROOT}
+done
+```
+
+```bash
+python examples/speech_to_text/prep_mtedx_data.py \
+  --data-root ${MTEDX_ROOT} --task asr --vocab-type unigram --vocab-size 5000 --lang-pairs es-es,pt-pt
+
+python examples/speech_to_text/prep_mtedx_data.py \
+  --data-root ${MTEDX_ROOT} --task st --vocab-type unigram --vocab-size 8000 --lang-pairs es-en,pt-en
+
+python examples/speech_to_text/prep_mtedx_data.py \
+  --data-root ${MTEDX_ROOT} --task st --vocab-type unigram --vocab-size 1000 --lang-pairs es-fr
+```
+
+### Create Synthetic Data with SegAugment
+
+Set up some useful parameters:
+
+```bash
+dataset_root=...      # the path to the dataset you want to augment
+src_lang=...          # the source language id (eg. "en")
+tgt_lang=...          # the target language id (eg. "de")
+min=...               # the minimum segment length in seconds
+max=...               # the maximum segment length in seconds
+shas_ckpt=...         # the path to the pre-trained SHAS classifier ckpt (English/Multilingual)
+shas_alg=...          # the type of segmentation algorithm (use "pdac" in general, and "pstrm" for max > 20)
+```
+
+<!-- DELETE THIS -->
+```bash
+dataset_root=$MUSTCv2_ROOT
+src_lang=en
+tgt_lang=de
+min=3
+max=10
+shas_ckpt=$SHAS_CKPTS/en_sfc_model.pt
+shas_alg=pdac
+```
+
+The following script will execute all steps of SegAugment in sequence and create the synthetic data for a given dataset.
+
+```bash
+bash ${SEGAUGMENT_ROOT}/src/seg_augment.sh \
+  $dataset_root $src_lang $tgt_lang $min $max $shas_ckpt $shas_alg
+```
+
+However since most steps can be done on parallel it is not very efficient. It is advisable to run the above command only after you have completed one round of augmentation with `$min`-`$max` since intermediate results will be cached.
+
+The following steps can be run in parallel:
+
+Step 1. Segmentation: Get an alternative segmentation for each document in the training set with SHAS.
+
+```bash
+conda activate shas
+
+synthetic_data_dir=${OUTPUT_ROOT}/synthetic_data/${dataset_name}/${lang_pair}/${ell}/${split}
+
+python $SHAS_ROOT/src/supervised_hybrid/segment.py \
+    -wav ${dataset_root}/${lang_pair}/data/${split}/wav \
+    -ckpt $shas_ckpt \
+    -max $max \
+    -min $min \
+    -alg $alg \
+    -cache ${OUTPUT_ROOT}/shas_probabilities/${dataset_name}/${src_lang} \
+    -yaml $synthetic_data_dir/new.yaml
+
+conda activate seg_augment
+```
+
+Step 2. Audio Alignment. Get the word segments for each document in the training set with CTC-based forced-alignment.
+
+```bash
+forced_alignment_dir=${OUTPUT_ROOT}/forced_alignment/${dataset_name}/${src_lang}
+
+python ${SEGAUGMENT_ROOT}/src/audio_alignment/get_word_segments.py \
+    -lang $src_lang \
+    -wav ${dataset_root}/${lang_pair}/data/${split}/wav \
+    -txt ${dataset_root}/${lang_pair}/data/${split}/txt/${split}.${src_lang} \
+    -yaml ${dataset_root}/${lang_pair}/data/${split}/txt/${split}.yaml \
+    -out $forced_alignment_dir
+```
+
+Step 3. Text Alignment. Learn the text alignment in the training set with an MT model.
+
+```bash
+bash ${SEGAUGMENT_ROOT}/src/text_alignment/get_alignment_model.sh \
+  $dataset_root $src_lang $tgt_lang $min $max $shas_ckpt
+```
+
+When all three steps are completed, get the synthetic transcriptions and translations:
+
+```bash
+python ${SEGAUGMENT_ROOT}/src/audio_alignment/get_source_text.py \
+  -new_yaml $synthetic_data_dir/new.yaml -align $forced_alignment_dir -lang $src_lang
+
+bash ${SEGAUGMENT_ROOT}/src/text_alignment/get_target_text.sh \
+  $dataset_root $src_lang $tgt_lang $min $max
+```
+
+* The output is stored at `$OUTPUT_ROOT/synthetic_data/<dataset_name>/<lang_pair>/<ell>/train` and is the same as the files available to download at [this section](#synthetic-datasets).;
+* The process can be repeated for different `$min`-`$max`. Several intermediate steps are cached, so that another augmentation is faster.;
+* Segmentation and audio alignments do not have to be repeated for the same dataset but with a different target language.;
+* The above scripts would work for any dataset that has the same file structure as MuST-C or mTEDx. This is `$DATASET_ROOT/<lang_pair>/data/<split>/txt/<split>.{src,tgt,yaml}`. Modifications would be required for other structures.
+
+To use the synthetic data for training ST models, you need to run a processing script that creates a tsv file, similar to the one for the [orginal data](#data). The process is much faster when more than 8 CPU cores are available.
+
+```bash
+bash ${SEGAUGMENT_ROOT}/src/utils/prep_synthetic_tsv.sh \
+  -data $dataset_root -src $src_lang -tgt $tgt_lang -ell ${min}-${max}
+```
+
+### Train with Synthetic Data from SegAugment
+
+Example for MuST-C v2.0 En-De.
+
+ASR pre-training on the original data:
+
+```bash
+bash $SEGAUGMENT_ROOT/src/experiments/mustc/train_asr_original.sh
+```
+
+ST training with the original and synthetic data (short, medium, long, xlong):
+
+```bash
+bash $SEGAUGMENT_ROOT/src/experiments/mustc/train_st_synthetic-all4.sh en-de
+```
+
+Example for mTEDx Es-En. (Use the "xs" model for Es-Fr)
+
+For the low-resource pairs of mTEDx we found that ASR pre-training with the synthetic data was very beneficial:
+
+```bash
+bash $SEGAUGMENT_ROOT/src/experiments/mtedx/train_asr_synthetic-all4.sh es-es s
+```
+
+ST training with the original and synthetic data (short, medium, long, xlong):
+
+```bash
+bash $SEGAUGMENT_ROOT/src/experiments/mtedx/train_st_synthetic-all4.sh es-en s
+```
