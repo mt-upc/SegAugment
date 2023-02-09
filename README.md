@@ -6,26 +6,22 @@ The pre-print of this research is available [here](https://arxiv.org/abs/2212.09
 Data scarcity is one of the main issues with the end-to-end approach for Speech Translation, as compared to the cascaded one. Although most data resources for Speech Translation are originally document-level, they offer a sentence-level view, which can be directly used during training. But this sentence-level view is single and static, potentially limiting the utility of the data. Our proposed data augmentation method SegAugment challenges this idea and aims to increase data availability by providing multiple alternative sentence-level views of a dataset. Our method heavily relies on an Audio Segmentation system to re-segment the speech of each document, after which we obtain the target text with alignment methods. The Audio Segmentation system can be parameterized with different length constraints, thus giving us access to multiple and diverse sentence-level views for each document. Experiments in MuST-C show consistent gains across 8 language pairs, with an average increase of 2.2 BLEU points, and up to 4.7 BLEU for lower-resource scenarios in mTEDx. Additionally, we find that SegAugment is also applicable to purely sentence-level data, as in CoVoST, and that it enables Speech Translation models to completely close the gap between the gold and automatic segmentation at inference time.
 </em>
 
-&nbsp;
+## Contents
+- [Download Synthetic Datasets](#download-synthetic-datasets)
+- [Usage](#usage)
+  - [Environment](#setting-up-the-environment)
+  - [Download and Prepare the Original Data](#original-data)
+    - [MuST-C](#must-c)
+    - [mTEDx](#mtedx)
+  - [Create Synthetic Data with SegAugment](#create-synthetic-data-with-segaugment)
+    - [Segmentation](#step-1-segmentation)
+    - [Audio Alignment](#step-2-audio-alignment)
+    - [Text Alignment](#step-3-text-alignment)
+    - [Source and Target text](#combining-the-previous-steps)
+  - [Experiments](#train-with-synthetic-data-from-segaugment)
+- [Citation](#citation)
 
-<img src="figures/introduction_solid.jpg" width="600">
-
-## Citation
-
-```bash
-@misc{https://doi.org/10.48550/arxiv.2212.09699,
-  doi = {10.48550/ARXIV.2212.09699},
-  url = {https://arxiv.org/abs/2212.09699},
-  author = {Tsiamas, Ioannis and Fonollosa, José A. R. and Costa-jussà, Marta R.},
-  keywords = {Computation and Language (cs.CL), Sound (cs.SD), Audio and Speech Processing (eess.AS)},
-  title = {{SegAugment: Maximizing the Utility of Speech Translation Data with Segmentation-based Augmentations}},
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {arXiv.org perpetual, non-exclusive license}
-}
-```
-
-## Synthetic Datasets
+## Download Synthetic Datasets
 
 Here you can download the generated data from SegAugment for MuST-C, mTEDx and CoVoST.
 
@@ -63,7 +59,7 @@ CoVoST
 
 To use the data for Speech Translation you will have to also download the original audio files for each dataset.
 
-## Code and Instructions for using SegAugment
+## Usage
 
 ### Setting up the environment
 
@@ -78,18 +74,6 @@ export SHAS_CKPTS=...               # the path to the pre-trained SHAS classifie
 export MUSTCv2_ROOT=...             # the path to save MuST-C v2.0
 export MUSTCv1_ROOT=...             # the path to save MuST-C v1.0
 export MTEDX_ROOT=...               # the path to save mTEDx
-```
-
-<!-- DELETE THIS -->
-```bash
-export SEGAUGMENT_ROOT=~/repos/SegAugment
-export OUTPUT_ROOT=$VEUSSD/seg_augment_out
-export FAIRSEQ_ROOT=~/repos/fairseq-internal-segmaugm
-export SHAS_ROOT=~/repos/SHAS
-export SHAS_CKPTS=$SCRATCH/pretrained_models/SHAS
-export MUSTCv2_ROOT=$SPEECH_DATA/MUSTC_v2.0_spec
-export MUSTCv1_ROOT=$SPEECH_DATA/MUSTC_v1.0_spec
-export MTEDX_ROOT=$SPEECH_DATA/mTEDx
 ```
 
 Clone this repository to `$SEGAUGMENT_ROOT`:
@@ -124,15 +108,17 @@ Create a second conda environment for SHAS (no need to activate it for now):
 conda env create -f ${SHAS_ROOT}/environment.yml
 ```
 
-Download the English and Multiliongual pre-trained SHAS classifier and save at `$SHAS_CKPTS`:
+Download the English and Multilingual pre-trained SHAS classifier and save at `$SHAS_CKPTS`:
 
 |[English](https://drive.google.com/u/0/uc?export=download&confirm=DOjP&id=1Y7frjVkB_85snZYHTn0PQQG_kC5afoYN)|[Multilingual](https://drive.google.com/u/0/uc?export=download&confirm=x9hB&id=1GzwhzbHBFtwDmQPKoDOdAfESvWBrv_wB)|
 |---|---|
 
 
-### Data
+### Original Data
 
 For our main experiments we used MuST-C and mTEDx. Follow the instructions here to download and prepare the original data.
+
+#### MuST-C
 
 Download MuST-C v2.0 En-De to `$MUSTCv2_ROOT` and the v1.0 En-X to `$MUSTCv1_ROOT`:\
 The dataset is available [here](https://ict.fbk.eu/must-c/). Press the bottom ”click here to download the corpus”, and select version V1 and V2 accordingly.
@@ -148,6 +134,8 @@ for root in $MUSTCv2_ROOT $MUSTCv1_ROOT; do
     --data-root $root --task st --vocab-type unigram --vocab-size 8000
 done
 ```
+
+#### mTEDx
 
 Download the mTEDx Es-En, Es-Pt, Es-Fr and Es, Pt ASR data to `$MTEDX_ROOT` and run the processing scripts to prepare them:
 
@@ -183,17 +171,6 @@ shas_ckpt=...         # the path to the pre-trained SHAS classifier ckpt (Englis
 shas_alg=...          # the type of segmentation algorithm (use "pdac" in general, and "pstrm" for max > 20)
 ```
 
-<!-- DELETE THIS -->
-```bash
-dataset_root=$MUSTCv2_ROOT
-src_lang=en
-tgt_lang=de
-min=3
-max=10
-shas_ckpt=$SHAS_CKPTS/en_sfc_model.pt
-shas_alg=pdac
-```
-
 The following script will execute all steps of SegAugment in sequence and create the synthetic data for a given dataset.
 
 ```bash
@@ -205,7 +182,9 @@ However since most steps can be done on parallel it is not very efficient. It is
 
 The following steps can be run in parallel:
 
-Step 1. Segmentation: Get an alternative segmentation for each document in the training set with SHAS.
+#### Step 1: Segmentation
+
+Get an alternative segmentation for each document in the training set with SHAS.
 
 ```bash
 conda activate shas
@@ -224,7 +203,9 @@ python $SHAS_ROOT/src/supervised_hybrid/segment.py \
 conda activate seg_augment
 ```
 
-Step 2. Audio Alignment. Get the word segments for each document in the training set with CTC-based forced-alignment.
+#### Step 2: Audio Alignment
+
+Get the word segments for each document in the training set with CTC-based forced-alignment.
 
 ```bash
 forced_alignment_dir=${OUTPUT_ROOT}/forced_alignment/${dataset_name}/${src_lang}
@@ -237,12 +218,16 @@ python ${SEGAUGMENT_ROOT}/src/audio_alignment/get_word_segments.py \
     -out $forced_alignment_dir
 ```
 
-Step 3. Text Alignment. Learn the text alignment in the training set with an MT model.
+#### Step 3: Text Alignment
+
+Learn the text alignment in the training set with an MT model.
 
 ```bash
 bash ${SEGAUGMENT_ROOT}/src/text_alignment/get_alignment_model.sh \
   $dataset_root $src_lang $tgt_lang $min $max $shas_ckpt
 ```
+
+#### Combining the previous steps
 
 When all three steps are completed, get the synthetic transcriptions and translations:
 
@@ -294,4 +279,19 @@ ST training with the original and synthetic data (short, medium, long, xlong):
 
 ```bash
 bash $SEGAUGMENT_ROOT/src/experiments/mtedx/train_st_synthetic-all4.sh es-en s
+```
+
+## Citation
+
+```bash
+@misc{https://doi.org/10.48550/arxiv.2212.09699,
+  doi = {10.48550/ARXIV.2212.09699},
+  url = {https://arxiv.org/abs/2212.09699},
+  author = {Tsiamas, Ioannis and Fonollosa, José A. R. and Costa-jussà, Marta R.},
+  keywords = {Computation and Language (cs.CL), Sound (cs.SD), Audio and Speech Processing (eess.AS)},
+  title = {{SegAugment: Maximizing the Utility of Speech Translation Data with Segmentation-based Augmentations}},
+  publisher = {arXiv},
+  year = {2022},
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
 ```
