@@ -21,7 +21,7 @@ fairseq-generate ${data_root}/${lang_pair} \
 --config-yaml config_${task}.yaml \
 --gen-subset ${split}_${task} \
 --task speech_to_text \
---path $path_to_ckpt\
+--path $path_to_ckpt \
 --max-tokens 200_000 \
 --batch-size 200 \
 --beam 5 \
