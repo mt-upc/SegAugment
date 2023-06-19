@@ -3,7 +3,7 @@
 The pre-print of this research is available [here](https://arxiv.org/abs/2212.09699).
 
 <em>
-Data scarcity is one of the main issues with the end-to-end approach for Speech Translation, as compared to the cascaded one. Although most data resources for Speech Translation are originally document-level, they offer a sentence-level view, which can be directly used during training. But this sentence-level view is single and static, potentially limiting the utility of the data. Our proposed data augmentation method SegAugment challenges this idea and aims to increase data availability by providing multiple alternative sentence-level views of a dataset. Our method heavily relies on an Audio Segmentation system to re-segment the speech of each document, after which we obtain the target text with alignment methods. The Audio Segmentation system can be parameterized with different length constraints, thus giving us access to multiple and diverse sentence-level views for each document. Experiments in MuST-C show consistent gains across 8 language pairs, with an average increase of 2.2 BLEU points, and up to 4.7 BLEU for lower-resource scenarios in mTEDx. Additionally, we find that SegAugment is also applicable to purely sentence-level data, as in CoVoST, and that it enables Speech Translation models to completely close the gap between the gold and automatic segmentation at inference time.
+End-to-end Speech Translation is hindered by a lack of available data resources. While most of them are based on documents, a sentence-level version is available, which is however single and static, potentially impeding the usefulness of the data. We propose a new data augmentation strategy, SegAugment, to address this issue by generating multiple alternative sentence-level versions of a dataset. Our method utilizes an Audio Segmentation system, which re-segments the speech of each document with different length constraints, after which we obtain the target text via alignment methods. Experiments demonstrate consistent gains across eight language pairs in MuST-C, with an average increase of 2.5 BLEU points, and up to 5 BLEU for low-resource scenarios in mTEDx. Furthermore, when combined with a strong system, SegAugment obtains state-of-the-art results in MuST-C. Finally, we show that the proposed method can also successfully augment sentence-level datasets, and that it enables Speech Translation models to close the gap between the manual and automatic segmentation at inference time.
 </em>
 
 ## Contents
@@ -31,9 +31,9 @@ The format is similar to the one found in MuST-C and mTEDx:
 * .tgt: A text file with the translation for each example
 * .yaml: A yaml file with the offset, duration and corresponding audio file for each example
 
-MuST-C
+MuST-C v1.0
 
-|En-De (v2.0)|[short](https://drive.google.com/uc?export=download&id=1v5B_974Xp_UXjy8VH5eXZgzqHHSGduRZ)|[medium](https://drive.google.com/uc?export=download&id=1v4wQyhH6laOgCCVW_WS-5Jy9w-KnCQY9)|[long](https://drive.google.com/uc?export=download&id=1uyKf0E6b8NhCEfJzrUxtTrmHViKq5vDC)|[extra-long](https://drive.google.com/uc?export=download&id=1usaybFjJC-gu4ARxosBzZjNlJNCCC2WX)|
+|En-De|[short](https://drive.google.com/file/d/1v5B_974Xp_UXjy8VH5eXZgzqHHSGduRZ/view?usp=drive_link)|[medium](https://drive.google.com/file/d/1v4wQyhH6laOgCCVW_WS-5Jy9w-KnCQY9/view?usp=drive_link)|[long](https://drive.google.com/file/d/1uyKf0E6b8NhCEfJzrUxtTrmHViKq5vDC/view?usp=drive_link)|[extra-long](https://drive.google.com/file/d/1usaybFjJC-gu4ARxosBzZjNlJNCCC2WX/view?usp=drive_link)|
 |---|---|---|---|---|
 |En-Es|[short](https://drive.google.com/uc?export=download&id=1sbNhHpfR_IIfUWvbb7g2FxMP_sn0DKkl)|[medium](https://drive.google.com/uc?export=download&id=1s_ZGShc1WODNgrt1UT87DkhdGKXvweVx)|[long](https://drive.google.com/uc?export=download&id=1sQO0iYEfbNUdS11rDMCb9YGTOZMIl6DH)|[extra-long](https://drive.google.com/uc?export=download&id=1sLPjnbpaMnmvOmYMnCIRviuIWtiuZCNG)|
 |En-Fr|[short](https://drive.google.com/uc?export=download&id=1szYcZfP9pFrAA6KN4oTpc5HouxAqxb8u)|[medium](https://drive.google.com/uc?export=download&id=1snpZjKGYRPJ3zu0f2HNWHgihByAQBklk)|[long](https://drive.google.com/uc?export=download&id=1sesgB_MUNnR5pHtuULn3kBLilHuZtctF)|[extra-long](https://drive.google.com/uc?export=download&id=1sgb9Am1doggPsVfeDrMCs6Y6qvpN4uiz)|
@@ -42,6 +42,11 @@ MuST-C
 |En-Pt|[short](https://drive.google.com/uc?export=download&id=1ts_GRYUbLSGJcWwMTCMORJqRgUjDJLnD)|[medium](https://drive.google.com/uc?export=download&id=1tv8RKkC9BSHo4OyWmtrzLSux1eVlqUWo)|[long](https://drive.google.com/uc?export=download&id=1tuevLRQDSaJ0qTsP2kCla8uybMz2FKPk)|[extra-long](https://drive.google.com/uc?export=download&id=1taZXQ-dY_4aMjVr4higdkbebaT-uBI66)|
 |En-Ro|[short](https://drive.google.com/uc?export=download&id=1uJNAqL4Cg5EE9Nup_eHCl7-WFYJ4qC8M)|[medium](https://drive.google.com/uc?export=download&id=1uC7rE6YiHimgJKgVBgZ0_N0t-YDzwuBR)|[long](https://drive.google.com/uc?export=download&id=1uAHFxmvP5Nyxgqy5ivyeFiBzJeDQd03Z)|[extra-long](https://drive.google.com/uc?export=download&id=1u-80RjJy3fpf_1Sm8inKOW-gIknpdvep)|
 |En-Ru|[short](https://drive.google.com/uc?export=download&id=1us_0aZab16a_Lz_EH9fDEYVjTCJeuRkg)|[medium](https://drive.google.com/uc?export=download&id=1uWWe5rjFpK019ISi3oS18UWsJ7WodH2Z)|[long](https://drive.google.com/uc?export=download&id=1uSk9V9W0R-bsygzKxEXx_c6C-qeInHGR)|[extra-long](https://drive.google.com/uc?export=download&id=1uJrLlydTW_UjfydFuHqJ_2-8BUtOjm06)|
+
+MuST-C v2.0
+
+|En-De|[short](https://drive.google.com/uc?export=download&id=1v5B_974Xp_UXjy8VH5eXZgzqHHSGduRZ)|[medium](https://drive.google.com/uc?export=download&id=1v4wQyhH6laOgCCVW_WS-5Jy9w-KnCQY9)|[long](https://drive.google.com/uc?export=download&id=1uyKf0E6b8NhCEfJzrUxtTrmHViKq5vDC)|[extra-long](https://drive.google.com/uc?export=download&id=1usaybFjJC-gu4ARxosBzZjNlJNCCC2WX)|
+|---|---|---|---|---|
 
 mTEDx
 
