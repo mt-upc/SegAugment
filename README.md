@@ -289,14 +289,21 @@ bash $SEGAUGMENT_ROOT/src/experiments/mtedx/train_st_synthetic-all4.sh es-en s
 ## Citation
 
 ```bash
-@misc{https://doi.org/10.48550/arxiv.2212.09699,
-  doi = {10.48550/ARXIV.2212.09699},
-  url = {https://arxiv.org/abs/2212.09699},
-  author = {Tsiamas, Ioannis and Fonollosa, José A. R. and Costa-jussà, Marta R.},
-  keywords = {Computation and Language (cs.CL), Sound (cs.SD), Audio and Speech Processing (eess.AS)},
-  title = {{SegAugment: Maximizing the Utility of Speech Translation Data with Segmentation-based Augmentations}},
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {arXiv.org perpetual, non-exclusive license}
+@inproceedings{tsiamas-etal-2023-segaugment,
+    title = {{SegAugment: Maximizing the Utility of Speech Translation Data with Segmentation-based Augmentations}},
+    author = "Tsiamas, Ioannis  and
+      Fonollosa, Jos{\'e}  and
+      Costa-juss{\`a}, Marta",
+    editor = "Bouamor, Houda  and
+      Pino, Juan  and
+      Bali, Kalika",
+    booktitle = "Findings of the Association for Computational Linguistics: EMNLP 2023",
+    month = dec,
+    year = "2023",
+    address = "Singapore",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2023.findings-emnlp.574",
+    doi = "10.18653/v1/2023.findings-emnlp.574",
+    pages = "8569--8588",
 }
 ```
